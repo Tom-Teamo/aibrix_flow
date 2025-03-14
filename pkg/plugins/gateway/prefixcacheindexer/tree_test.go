@@ -33,6 +33,8 @@ func Test_LPRadixCacheE2E(t *testing.T) {
 		{ObjectMeta: metav1.ObjectMeta{Name: "p2"}},
 	}
 
+	// [9906 4435 0 3639 264 7839 6187 0 7839 29084 0 220 57668 53901 3574 244 98220 6447
+	// 43240 82696 58666 53901 9554 15120 36827 28308 232 6447 6079 102 17905 53901 6447]
 	inputText := "Hello World! What a Good Day! Good Morning! 你好世界！多么美好的一天啊！早上好！"
 	tokens, err := utils.TokenizeInputText(inputText)
 	assert.Equal(t, nil, err)
@@ -45,6 +47,8 @@ func Test_LPRadixCacheE2E(t *testing.T) {
 		unMatchedTokens)
 	assert.Equal(t, 0, len(matchPods))
 
+	cache.PrettyPrint()
+
 	// Add prefix and verify it can be matched
 	cache.AddPrefix(unMatchedTokens, "m1", "p1")
 	matchedTokens, unMatchedTokens, matchPods = cache.MatchPrefix(tokens, "m1", pods)
@@ -54,6 +58,8 @@ func Test_LPRadixCacheE2E(t *testing.T) {
 	assert.Equal(t, 0, len(unMatchedTokens))
 	assert.Equal(t, "p1", matchPods[0].Name)
 
+	cache.PrettyPrint()
+
 	// Test eviction
 	cache.Evict(time.Now().Add(60 * time.Minute))
 	_, unMatchedTokens, matchPods = cache.MatchPrefix(tokens, "m1", pods)
@@ -61,6 +67,8 @@ func Test_LPRadixCacheE2E(t *testing.T) {
 		[]int{9906, 4435, 0, 3639, 264, 7839, 6187, 0, 7839, 29084, 0, 220, 57668, 53901, 3574, 244, 98220, 6447, 43240, 82696, 58666, 53901, 9554, 15120, 36827, 28308, 232, 6447, 6079, 102, 17905, 53901, 6447},
 		unMatchedTokens)
 	assert.Equal(t, 0, len(matchPods))
+
+	cache.PrettyPrint()
 }
 
 func Test_RadixMatchPrefix(t *testing.T) {

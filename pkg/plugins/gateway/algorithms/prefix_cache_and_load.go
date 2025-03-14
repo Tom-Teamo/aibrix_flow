@@ -452,6 +452,7 @@ func (p *prefixCacheAndLoadRouter) Route(ctx context.Context, pods map[string]*v
 	if len(readyPods) == 0 {
 		return "", fmt.Errorf("no pods to forward request")
 	}
+	
 	if len(readyPods) == 1 {
 		for _, pod := range readyPods {
 			return getPodAddress(pod.Status.PodIP)
